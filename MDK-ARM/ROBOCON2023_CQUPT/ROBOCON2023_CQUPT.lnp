@@ -42,6 +42,7 @@
 "robocon2023_cqupt\bsp_as5048.o"
 "robocon2023_cqupt\bsp_can.o"
 "robocon2023_cqupt\bsp_sbus.o"
+"robocon2023_cqupt\action_usart.o"
 "robocon2023_cqupt\chassis_behaviour.o"
 "robocon2023_cqupt\chassis_task.o"
 "robocon2023_cqupt\task.o"
