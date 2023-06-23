@@ -30,11 +30,14 @@
 #include "bsp_can.h"
 #include "bsp_sbus.h"
 #include "stdio.h"
+#include "log.h"
+#include "commend.h"
 //重写printf
 int fputc(int ch,FILE *f)
 {
     uint8_t temp[1]= {ch};
     HAL_UART_Transmit(&huart6,temp,1,2);
+	return 0;
 }
 
 #define BUFFERSIZE 255	//可接收的最大数据量
@@ -129,6 +132,9 @@ int main(void)
   dbus_uart_init();
   my_can_filter_init_recv_all(&hcan1);
   can_filter_recv_special(&hcan2);
+    var_init();
+	extern void userShellInit(void);//由于该rtos不支持宏自动初始化,故手动初始化
+  userShellInit();
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

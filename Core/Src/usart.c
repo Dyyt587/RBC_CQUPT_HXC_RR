@@ -21,7 +21,8 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "shell.h"
+#include "shell_port.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -420,5 +421,21 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	static int cnt=0;
+	if(huart==&huart6){
+		extern Shell shell;
+		extern uint8_t shelldata;	
+		extern struct kfifo shell_rxfifo;	
+		uint8_t data=shelldata;//²»ÒªÉ¾
+		HAL_UART_Receive_IT(&huart6,(uint8_t*)&shelldata,1);//
+		cnt++;
+		kfifo_in(&shell_rxfifo,&data,1);
+	  //shellHandler(&shell, data);
+
+	}
+
+}
 
 /* USER CODE END 1 */

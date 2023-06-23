@@ -10,7 +10,7 @@
       <TargetName>ROBOCON2023_CQUPT</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\Compiler_5.06u7</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -186,6 +186,7 @@
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -339,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F427xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Control;../Hardware;../Task;..\Hardware\action_usart</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Control;../Hardware;../Task;..\Hardware\action_usart;..\Middlewares\Third_Party\LetterShell\src;..\Middlewares\Third_Party\LetterShell\extensions\log;..\Middlewares\Third_Party\LetterShell\extensions</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -672,6 +673,56 @@
               <FileName>pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Control\pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>kfifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Control\kfifo.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/LetterShell</GroupName>
+          <Files>
+            <File>
+              <FileName>shell.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\LetterShell\src\shell.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell_cmd_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\LetterShell\src\shell_cmd_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell_companion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\LetterShell\src\shell_companion.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell_ext.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\LetterShell\src\shell_ext.c</FilePath>
+            </File>
+            <File>
+              <FileName>shell_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\LetterShell\src\shell_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\LetterShell\extensions\log\log.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Commend</GroupName>
+          <Files>
+            <File>
+              <FileName>commend.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\LetterShell\src\commend.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -50,6 +50,14 @@
 "robocon2023_cqupt\test_task.o"
 "robocon2023_cqupt\upper_behaviour.o"
 "robocon2023_cqupt\pid.o"
+"robocon2023_cqupt\kfifo.o"
+"robocon2023_cqupt\shell.o"
+"robocon2023_cqupt\shell_cmd_list.o"
+"robocon2023_cqupt\shell_companion.o"
+"robocon2023_cqupt\shell_ext.o"
+"robocon2023_cqupt\shell_port.o"
+"robocon2023_cqupt\log.o"
+"robocon2023_cqupt\commend_1.o"
 --library_type=microlib --strict --scatter "ROBOCON2023_CQUPT\ROBOCON2023_CQUPT.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
