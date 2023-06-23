@@ -80,12 +80,26 @@ void test_task(void const * argument)
 			set_C620moter(rc.ch4*20,80,0.1);
 		}
 		else if(rc.ch6==2){
-			
-			set_C620moter(rc.ch4*20,-30,1.8);
+			printf("ch4=%d\r\n",rc.ch4*20);//往上移得到的数大于0
+			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4) == 0 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_5) == 0) //上下两个微动开关都没接触
+			{
+			  set_C620moter(rc.ch4*20,-30,1.8);
 				if(ABS(upper_Move.Wheel_Dir[1].angle-10)<1.0){
 					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);;//gpio
 				}
-			
+			}else if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4) == 1 ) //上部分的环接触到微动开关
+			{
+				if(rc.ch4 < 0)//只允许遥控向下转动
+				{
+					set_C620moter(rc.ch4*20,-30,1.8);
+				}
+			}else if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_5) == 1 ) //下部分的地盘接触到微动开关
+			{
+				if(rc.ch4 > 0)//只允许遥控向上转动
+				{
+					set_C620moter(rc.ch4*20,-30,1.8);
+				}					
+			}
 		}
 		
 
