@@ -81,27 +81,16 @@ void led_task(void const * argument)
 		if(rc.ch5==3){
 		//初始位置
 			Set_SolenoidValve(BaoHuan,0);
-			Set_SolenoidValve(PingTai,1);
-			flag1_2=1;
+			Set_SolenoidValve(PingTai,0);
 		}else if(rc.ch5==1){
 			Set_SolenoidValve(BaoHuan,1);
 			
-			
 		}else if(rc.ch5==2){
-//			Set_SolenoidValve(PingTai,1);
-			//推环 送环
-			if(flag1_2==1)
-			{
-				Set_SolenoidValve(TuiHuan,1);
-				osDelay(500);
-				Set_SolenoidValve(PingTai,0);
-				Set_SolenoidValve(TuiHuan,0);
-				osDelay(500);
-				flag1_2=0;
-			}
+			Set_SolenoidValve(PingTai,1);
+			
 			
 		}
-		
+
 //		if(rc.ch5==3){
 //		//初始位置
 //			Set_SolenoidValve(BaoHuan,0);

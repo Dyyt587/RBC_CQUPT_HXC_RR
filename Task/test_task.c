@@ -71,21 +71,14 @@ void test_task(void const * argument)
 		//丝杆和甩环调节 	
 		if(rc.ch6==1){
 				set_C620moter(rc.ch4*20,90,1.0); 	
-				if(ABS(upper_Move.Wheel_Dir[1].angle-0)<1.0){
-					
-					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_RESET);//gpio
-				}
+			Set_SolenoidValve(TuiHuan,1);
 		}
 		else if(rc.ch6==3){
 			set_C620moter(rc.ch4*20,0,1.0);
+			Set_SolenoidValve(TuiHuan,0);
 		}
 		else if(rc.ch6==2){
-			
 			set_C620moter(rc.ch4*20,-90,1.0);
-				if(ABS(upper_Move.Wheel_Dir[1].angle-10)<1.0){
-					HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);;//gpio
-				}
-			
 		}
 		
 
