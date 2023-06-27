@@ -30,8 +30,8 @@
  
  //全场定位数据  串口6
 #define BUFFERSIZE 255	//可接收的最大数据量
-extern uint8_t Rx_len_Huart6;//串口6接收长度
-extern uint8_t ReceiveBuff_Huart6[BUFFERSIZE]; //串口6接收缓冲区
+extern uint8_t Rx_len_Huart7;//串口6接收长度
+extern uint8_t ReceiveBuff_Huart7[BUFFERSIZE]; //串口6接收缓冲区
 extern int testcount;
 extern float pos_x;//坐标X--ZBx
 extern float pos_y;//坐标Y--ZBy
@@ -81,6 +81,8 @@ extern CAN_HandleTypeDef hcan2;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart2_rx;
 extern DMA_HandleTypeDef hdma_usart6_rx;
+extern DMA_HandleTypeDef hdma_usart7_rx;
+extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart6;
@@ -377,27 +379,41 @@ void USART6_IRQHandler(void)
   /* USER CODE END USART6_IRQn 0 */
   HAL_UART_IRQHandler(&huart6);
   /* USER CODE BEGIN USART6_IRQn 1 */
-	 uint32_t temp;//计算串口接收到的数据个数
+	
+  /* USER CODE END USART6_IRQn 1 */
+}
+
+/**
+  * @brief This function handles UART7 global interrupt.
+  */
+void UART7_IRQHandler(void)
+{
+  /* USER CODE BEGIN UART7_IRQn 0 */
+
+  /* USER CODE END UART7_IRQn 0 */
+  HAL_UART_IRQHandler(&huart7);
+  /* USER CODE BEGIN UART7_IRQn 1 */
+	uint32_t temp;//计算串口接收到的数据个数
     static union
     {
         uint8_t date[24];
         float ActVal[6];
     } posture;
-    if(USART6 == huart6.Instance)//判断是否为串口1中断
+    if(UART7 == huart7.Instance)//判断是否为串口1中断
     {
-        if(RESET != __HAL_UART_GET_FLAG(&huart6,UART_FLAG_IDLE))//如果为串口1空闲
+        if(RESET != __HAL_UART_GET_FLAG(&huart7,UART_FLAG_IDLE))//如果为串口1空闲
         {
-            __HAL_UART_CLEAR_IDLEFLAG(&huart6);//清除中断标志
-            HAL_UART_DMAStop(&huart6);//停止DMA接收
-            temp  = __HAL_DMA_GET_COUNTER(&hdma_usart6_rx);//获取DMA当前还有多少未填充
-            Rx_len_Huart6 =  BUFFERSIZE - temp; //计算串口接收到的数据个数
+            __HAL_UART_CLEAR_IDLEFLAG(&huart7);//清除中断标志
+            HAL_UART_DMAStop(&huart7);//停止DMA接收
+            temp  = __HAL_DMA_GET_COUNTER(&hdma_usart7_rx);//获取DMA当前还有多少未填充
+            Rx_len_Huart7 =  BUFFERSIZE - temp; //计算串口接收到的数据个数
             /*************************************************************************/
             //接收数据处理
-            if(Rx_len_Huart6==28)
+            if(Rx_len_Huart7==28)
             {
                 for(int i=0; i<24; i++)
                 {
-                    posture.date[i]=ReceiveBuff_Huart6[i+2];
+                    posture.date[i]=ReceiveBuff_Huart7[i+2];
                 }
                 zangle=-posture.ActVal[0];
                 xangle=posture.ActVal[1];
@@ -408,11 +424,11 @@ void USART6_IRQHandler(void)
             }
             /*************************************************************************/
             //重新开启下一次接收
-            Rx_len_Huart6=0;//接收数据长度清零
-            HAL_UART_Receive_DMA(&huart6,ReceiveBuff_Huart6,BUFFERSIZE);//开启下一次接收
+            Rx_len_Huart7=0;//接收数据长度清零
+            HAL_UART_Receive_DMA(&huart7,ReceiveBuff_Huart7,BUFFERSIZE);//开启下一次接收
         }
     }
-  /* USER CODE END USART6_IRQn 1 */
+  /* USER CODE END UART7_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

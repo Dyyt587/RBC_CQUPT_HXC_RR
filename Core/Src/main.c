@@ -38,8 +38,8 @@ int fputc(int ch,FILE *f)
 }
 
 #define BUFFERSIZE 255	//可接收的最大数据量
-uint8_t Rx_len_Huart6;//串口6接收长度
-uint8_t ReceiveBuff_Huart6[BUFFERSIZE]; //串口6接收缓冲区
+uint8_t Rx_len_Huart7;//串口6接收长度
+uint8_t ReceiveBuff_Huart7[BUFFERSIZE]; //串口6接收缓冲区
 float pos_x=0;//坐标X--ZBx
 float pos_y=0;//坐标Y--ZBy
 float zangle=0;//航向角
@@ -125,6 +125,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
+  MX_UART7_Init();
   /* USER CODE BEGIN 2 */
   dbus_uart_init();
   my_can_filter_init_recv_all(&hcan1);
@@ -136,7 +137,6 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
-
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */

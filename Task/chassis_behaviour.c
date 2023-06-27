@@ -93,10 +93,45 @@ static void chassis_remote_move_control(fp32 *Vx_Set, fp32 *Vy_Set, fp32 *Vw_Set
 
 
 
+static void chassis_local_move_control(fp32 *Vx_Set, fp32 *Vy_Set, fp32 *Vw_Set, chassis_move_t *Chassis_Move_Rc_to_Vector)
+{
+	if (Vx_Set == NULL || Vy_Set == NULL || Vw_Set == NULL || Chassis_Move_Rc_to_Vector == NULL)
+    {
+        return;
+    }
+
+
+		switch(Chassis_Move_Rc_to_Vector->Chassis_RC->ch6) 
+		{
+			case 1:
+				*Vx_Set =0;
+			  *Vy_Set =0;
+			  *Vw_Set =0;
+			
+				break;
+			case 2:
+				*Vx_Set =500;
+			  *Vy_Set =500;
+			  *Vw_Set =0;
+			break;
+			case 3:
+				
+				*Vx_Set =1000;
+			  *Vy_Set =1000;
+			  *Vw_Set =0;
+			break;
+			
+		}
+
+    return;
+}
+
+
 //留意，这个底盘行为模式变量
 
 //注：为适应dji遥控器，空出ch5，默认为遥控模式
-chassis_behaviour_mode_e Chassis_Behaviour_Mode = CHASSIS_REMOTE_MOVE;
+//为了便于测试，现将此注释掉
+chassis_behaviour_mode_e Chassis_Behaviour_Mode; //= CHASSIS_REMOTE_MOVE;
 
 /**
   * @brief          通过逻辑判断，赋值"chassis_behaviour_mode"成哪种模式
@@ -112,18 +147,22 @@ void chassis_behaviour_mode_set(chassis_move_t *Chassis_Move_Mode)
 
     //根据行为模式选择一个底盘控制模式
     //添加自己的逻辑判断进入新模式
+		//又添加了一份
+		//通道五一档————无力
+		//通道五二档————定位
+		//通道五三栋————遥控
     if(Chassis_Move_Mode->Chassis_RC->ch5 == 1)
     {
         Chassis_Behaviour_Mode = CHASSIS_ZERO_FORCE;
     }
+//    else if(Chassis_Move_Mode->Chassis_RC->ch5 == 2)
+//    {
+//        Chassis_Behaviour_Mode = CHASSIS_NO_MOVE;
+//    }
     else if(Chassis_Move_Mode->Chassis_RC->ch5 == 2)
     {
-        Chassis_Behaviour_Mode = CHASSIS_NO_MOVE;
+        Chassis_Behaviour_Mode = CHASSIS_LOCATING_MOVE;
     }
-//    else if(Chassis_Move_Mode->Chassis_RC->ch5 == 4)
-//    {
-//        Chassis_Behaviour_Mode = CHASSIS_LOCATING_MOVE;
-//    }
     else if(Chassis_Move_Mode->Chassis_RC->ch5 ==3)
     {
         Chassis_Behaviour_Mode = CHASSIS_REMOTE_MOVE;
@@ -172,8 +211,9 @@ void chassis_behaviour_control_set(fp32 *Vx_Set, fp32 *Vy_Set, fp32 *Vw_Set, cha
     {
         chassis_no_move_control(Vx_Set, Vy_Set, Vw_Set, Chassis_Move_Rc_To_Vector);
     }
-    else if (Chassis_Behaviour_Mode == CHASSIS_LOCATING_MOVE)
+    else if (Chassis_Behaviour_Mode == CHASSIS_LOCATING_MOVE)//底盘定位，注意哦
     {
+			chassis_local_move_control(Vx_Set, Vy_Set, Vw_Set, Chassis_Move_Rc_To_Vector);
 
     }
     else if (Chassis_Behaviour_Mode == CHASSIS_REMOTE_MOVE)
