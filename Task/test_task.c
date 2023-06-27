@@ -78,7 +78,7 @@ void test_task(void const * argument)
 			Set_SolenoidValve(TuiHuan,0);
 		}
 		else if(rc.ch6==2){
-			set_C620moter(rc.ch4*20,-90,1.0);
+			set_C620moter(rc.ch4*20,-90,1.0);//-ni
 		}
 		
 

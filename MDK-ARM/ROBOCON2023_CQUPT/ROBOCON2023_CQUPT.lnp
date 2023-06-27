@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp
+--cpu=Cortex-M4.fp.sp
 "robocon2023_cqupt\startup_stm32f427xx.o"
 "robocon2023_cqupt\main.o"
 "robocon2023_cqupt\gpio.o"
@@ -51,6 +51,6 @@
 "robocon2023_cqupt\upper_behaviour.o"
 "robocon2023_cqupt\pid.o"
 --library_type=microlib --strict --scatter "ROBOCON2023_CQUPT\ROBOCON2023_CQUPT.sct"
---summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "ROBOCON2023_CQUPT.map" -o ROBOCON2023_CQUPT\ROBOCON2023_CQUPT.axf
