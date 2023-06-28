@@ -64,21 +64,21 @@ void test_task(void const * argument)
 	//对于甩环电机，位置环，速度环 闭环
 	upper_Init(&upper_Move);
 //	int flag_push=0;
-//	set_C620moter(rc.ch4*20,30,1.0);
+	set_C620moter(rc.ch4*20,60,0.5);
 	while(1)
 	{
 		upper_feedback_update();
 		//丝杆和甩环调节 	
 		if(rc.ch6==1){
-				set_C620moter(rc.ch4*20,90,1.0); 	
+				set_C620moter(rc.ch4*20,0,1.0); 	
 			Set_SolenoidValve(TuiHuan,1);
 		}
 		else if(rc.ch6==3){
-			set_C620moter(rc.ch4*20,0,1.0);
+			set_C620moter(rc.ch4*20,50,0.5);
 			Set_SolenoidValve(TuiHuan,0);
 		}
 		else if(rc.ch6==2){
-			set_C620moter(rc.ch4*20,-90,1.0);//-ni
+			set_C620moter(rc.ch4*20,-100,3.0);//-ni
 		}
 		
 

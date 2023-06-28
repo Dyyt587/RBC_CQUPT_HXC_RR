@@ -596,6 +596,7 @@ static void set_pos(float X_target, float Y_target, float Angle_target,
     else
         Angle_speed_current = 3 * PI / 2 - (Angle_speed + Angle_current);
 
+#define abs(x)        ((x>0)? (x): (-x))
 
     /**ÇóV0*/
     V0 = Kp_V0 * sqrt((Y_target - Y_current) * (Y_target - Y_current) + (X_target - X_current) * (X_target - X_current));
