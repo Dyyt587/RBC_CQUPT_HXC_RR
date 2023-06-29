@@ -64,22 +64,84 @@ void test_task(void const * argument)
 	//对于甩环电机，位置环，速度环 闭环
 	upper_Init(&upper_Move);
 //	int flag_push=0;
-//	set_C620moter(rc.ch4*20,30,1.0);
+	set_C620moter(rc.ch4*20,60,1.0);
 	while(1)
 	{
 		upper_feedback_update();
-		//丝杆和甩环调节 	
-		if(rc.ch6==1){
-				set_C620moter(rc.ch4*20,90,1.0); 	
-			Set_SolenoidValve(TuiHuan,1);
-		}
-		else if(rc.ch6==3){
-			set_C620moter(rc.ch4*20,0,1.0);
-			Set_SolenoidValve(TuiHuan,0);
-		}
-		else if(rc.ch6==2){
-			set_C620moter(rc.ch4*20,-90,1.0);//-ni
-		}
+			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4) ==0 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_5) ==0)//下限
+			{
+						//丝杆和甩环调节 	
+					if(rc.ch6==1){	
+						Set_SolenoidValve(TuiHuan,1);
+						set_C620moter(rc.ch4*20,0,1.0);  
+					}
+					else if(rc.ch6==3){
+						set_C620moter(rc.ch4*20,60,1.0);
+						Set_SolenoidValve(TuiHuan,0);
+					}
+					else if(rc.ch6==2){
+						set_C620moter(rc.ch4*20,-90,2.0);					
+					}
+			}else if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4) ==1)  //限位开关触碰到下限，只能往上
+			{
+				if(rc.ch4 > 0) //通道4的模拟值大于4，说明平台往上
+				{
+					if(rc.ch6==1){	
+						Set_SolenoidValve(TuiHuan,1);
+						set_C620moter(rc.ch4*20,0,1.0);  
+					}
+					else if(rc.ch6==3){
+						set_C620moter(rc.ch4*20,60,1.0);
+						Set_SolenoidValve(TuiHuan,0);
+					}
+					else if(rc.ch6==2){
+						set_C620moter(rc.ch4*20,-90,2.0);					
+					}
+				}else  //往下让丝杆失灵
+				{
+					if(rc.ch6==1){	 
+						Set_SolenoidValve(TuiHuan,1);
+						set_C620moter(0,0,1.0);  
+					}
+					else if(rc.ch6==3){
+						set_C620moter(0,60,1.0);
+						Set_SolenoidValve(TuiHuan,0);
+					}
+					else if(rc.ch6==2){
+						set_C620moter(0,-90,2.0);					
+					}					
+				}
+			}else if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_5) ==1)
+			{
+				if(rc.ch4 < 0) //通道4的模拟值<于4，说明平台往 xia
+				{
+					if(rc.ch6==1){	
+						Set_SolenoidValve(TuiHuan,1);
+						set_C620moter(rc.ch4*20,0,1.0);  
+					}
+					else if(rc.ch6==3){
+						set_C620moter(rc.ch4*20,60,1.0);
+						Set_SolenoidValve(TuiHuan,0);
+					}
+					else if(rc.ch6==2){
+						set_C620moter(rc.ch4*20,-90,2.0);					
+					}
+				}else  //
+				{
+					if(rc.ch6==1){	 
+						Set_SolenoidValve(TuiHuan,1);
+						set_C620moter(0,0,1.0);  
+					}
+					else if(rc.ch6==3){
+						set_C620moter(0,60,1.0);
+						Set_SolenoidValve(TuiHuan,0);
+					}
+					else if(rc.ch6==2){
+						set_C620moter(0,-90,2.0);					
+					}					
+				}				
+			}
+
 		
 
 		
