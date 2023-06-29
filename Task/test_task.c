@@ -53,11 +53,11 @@ static void upper_Init(chassis_move_t* upper_Move_Init){
     PID_struct_init(&upper_Move_Init->chassis_angle_pid, POSITION_PID, 20000, 2000,
                     500.f, 0.00f, 0.01);
 }
-void set_ch6(void){
+static void set_ch6(void){
 		if(rc.ch6==1)
 		{	
 			Set_SolenoidValve(TuiHuan ,1);
-			set_C620moter(0,60,1.0);
+			set_C620moter(rc.ch4*20,50,1.0);
 		}
 		else if(rc.ch6==3)
 		{
@@ -70,7 +70,7 @@ void set_ch6(void){
 		}
 
 }
-void set_ch6_0(void){
+static void set_ch6_0(void){
 		if(rc.ch6==1)
 		{	
 			Set_SolenoidValve(TuiHuan,1); 
@@ -136,10 +136,8 @@ void test_task(void const * argument)
 				{
 					set_ch6_0();	
 					}					
-				}				
-			}	
-	    	//RUN_LED();
-	   	if(rc.ch5==3){
+				}
+			if(rc.ch5==3){
 	   	//≥ı ºŒª÷√
 	   		Set_SolenoidValve(BaoHuan,0);
 	   		Set_SolenoidValve(PingTai,0);
@@ -148,4 +146,8 @@ void test_task(void const * argument)
 	   	}else if(rc.ch5==2){
 	   		Set_SolenoidValve(PingTai,1);	
 	   	}
+			osDelay(10);
+			}	
+	    	//RUN_LED();
+	   	
 }
