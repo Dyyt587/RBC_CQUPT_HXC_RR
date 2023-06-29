@@ -78,10 +78,10 @@ extern uint8_t ReceiveBuff_Huart2[BUFFERSIZE]; //串口2接收缓冲区
 /* External variables --------------------------------------------------------*/
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
+extern DMA_HandleTypeDef hdma_uart7_rx;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart2_rx;
 extern DMA_HandleTypeDef hdma_usart6_rx;
-extern DMA_HandleTypeDef hdma_usart7_rx;
 extern UART_HandleTypeDef huart7;
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
@@ -189,6 +189,20 @@ void DebugMon_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles DMA1 stream3 global interrupt.
+  */
+void DMA1_Stream3_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Stream3_IRQn 0 */
+
+  /* USER CODE END DMA1_Stream3_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_uart7_rx);
+  /* USER CODE BEGIN DMA1_Stream3_IRQn 1 */
+
+  /* USER CODE END DMA1_Stream3_IRQn 1 */
+}
 
 /**
   * @brief This function handles DMA1 stream5 global interrupt.
@@ -405,7 +419,7 @@ void UART7_IRQHandler(void)
         {
             __HAL_UART_CLEAR_IDLEFLAG(&huart7);//清除中断标志
             HAL_UART_DMAStop(&huart7);//停止DMA接收
-            temp  = __HAL_DMA_GET_COUNTER(&hdma_usart7_rx);//获取DMA当前还有多少未填充
+            temp  = __HAL_DMA_GET_COUNTER(&hdma_uart7_rx);//获取DMA当前还有多少未填充
             Rx_len_Huart7 =  BUFFERSIZE - temp; //计算串口接收到的数据个数
             /*************************************************************************/
             //接收数据处理

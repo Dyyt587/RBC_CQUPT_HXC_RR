@@ -18,10 +18,10 @@ void Set_SolenoidValve(int function,int n);
 void set_C620moter(float speed_sigan,float angle_paohuan,float speed_paohuan);
 void upper_feedback_update(void);
 
-#define TuiHuan 4   //I1
-#define PingTai 2	//I2BaoHuan
-#define JiaZhua_nouse 3	//L1JiaZhua
-#define BaoHuan 1	//L2
+#define TuiHuan 4   //L2
+#define PingTai 2	//I2
+#define JiaZhua_nouse 3	//L1
+#define BaoHuan 1	//I1
 
 #endif
 
