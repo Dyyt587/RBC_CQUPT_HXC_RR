@@ -9,6 +9,16 @@
 
 #define CHASSIS_CAN hcan1
 
+//全场定位
+//int testcount=0;
+extern float pos_x;//坐标X--ZBx
+extern float pos_y;//坐标Y--ZBy
+extern float zangle;//航向角
+extern float xangle;//俯仰角
+extern float yangle;//横滚角
+extern float w_z;//航向角速
+typedef float fp32;
+typedef double fp64;
 
 static void chassis_init(chassis_move_t *Chassis_Move_Init);
 
@@ -20,6 +30,12 @@ static void  chassis_set_kinematics(const fp32 Vx_set, const fp32 Vy_set, const 
 static void chassis_control_loop(chassis_move_t *Chassis_Move_Control_Loop);
 
 static void chassis_info_print(chassis_move_t *Chassis_Info);
+
+
+static void set_pos(float X_target, float Y_target, float Angle_target,
+             float X_current, float Y_current, float Angle_current,
+							 chassis_move_t *Chassis_Move_Control_Loop) ;	
+static void Set_speed(int Velocity_X, int Velocity_Y, int W,chassis_move_t *Chassis_Move_Control_Loop);
 
 //底盘运动数据
 chassis_move_t Chassis_Move;
@@ -43,7 +59,7 @@ void chassis_task(void const * argument)
     while(1)
     {
         //设置底盘控制模式
-//        chassis_set_mode(&Chassis_Move);
+        chassis_set_mode(&Chassis_Move);
         //模式切换数据保存
         //chassis_mode_change_control_transit(&Chassis_Move);
 
@@ -466,6 +482,8 @@ static void  chassis_set_kinematics(const fp32 Vx_set, const fp32 Vy_set, const 
   */
 static void chassis_control_loop(chassis_move_t *Chassis_Move_Control_Loop)
 {
+	if(Chassis_Move_Control_Loop->Chassis_RC->ch5==3)
+	{
     //运动分解
     chassis_set_kinematics(Chassis_Move_Control_Loop->Vx_Set,
                            Chassis_Move_Control_Loop->Vy_Set,
@@ -523,8 +541,153 @@ static void chassis_control_loop(chassis_move_t *Chassis_Move_Control_Loop)
                   Chassis_Move_Control_Loop->Wheel_Dir[3].give_current
                  );
     }
+	}
+	else if(Chassis_Move_Control_Loop->Chassis_RC->ch5==2)
+	{
+			set_pos(Chassis_Move_Control_Loop->Vx_Set,
+	  	Chassis_Move_Control_Loop->Vy_Set,
+	  	Chassis_Move_Control_Loop->Vw_Set,
+	  	pos_x,
+	  	pos_y,
+	  	zangle,
+	  	&Chassis_Move
+	  	);	
+	}
 }
 
+
+static void set_pos(float X_target, float Y_target, float Angle_target,
+             float X_current, float Y_current, float Angle_current,
+							 chassis_move_t *Chassis_Move_Control_Loop) 				 
+{
+	int Kp_V0 = 75;
+    int Kp_W = 30000;//40000
+
+    int V0_MAX = 3500;
+    int V0_MIN = -3500;
+    int W_MAX = 12000;
+    int W_MIN = -12000;
+
+    //底盘速度
+    float Vx = 0; //x方向速度
+    float Vy = 0; //y方向速度
+    float V0 = 0; //底盘运动方向速度
+    float W = 0;  //自转速度 顺时针为正
+    int deta=0;
+    static float V0_last = 0; //上一时刻底盘运动速度大小,用于速度的增量限幅
+    //底盘速度方向角度
+    float Angle_speed;          //底盘速度方向与X轴正方向夹角 [0 , 180]
+    float Angle_speed_current;  //感知魔块读取的角度(yaw) [-180,180]
+
+    //角度转换为弧度
+    //float PI = 3.1415926;
+    Angle_target = Angle_target / 180.0 * PI;
+    Angle_current = Angle_current / 180.0 * PI;
+    //Angle_speed = Angle_current;
+    /**计算速度方向*/
+    if (X_current == X_target)
+        Angle_speed = PI / 2;
+    else
+        Angle_speed = atan((Y_target - Y_current) / (X_target - X_current));
+    if (Angle_speed < 0)
+        Angle_speed = Angle_speed + PI;
+    if (Y_target > Y_current)
+        Angle_speed_current = PI / 2 - (Angle_speed + Angle_current);
+    else
+        Angle_speed_current = 3 * PI / 2 - (Angle_speed + Angle_current);
+
+#define abs(x)        ((x>0)? (x): (-x))
+
+    /**求V0*/
+    V0 = Kp_V0 * sqrt((Y_target - Y_current) * (Y_target - Y_current) + (X_target - X_current) * (X_target - X_current));
+    /**V0限幅*/
+    deta = V0 - V0_last;
+    if (deta > 50) {
+        deta = 50 * deta / abs(deta);
+    }
+    V0 = V0_last + deta;
+    V0_last = V0;
+    /** 计算Vx Vy W */
+    V0 = V0 < V0_MAX ? V0 : V0_MAX;
+    V0 = V0 > V0_MIN ? V0 : V0_MIN;
+
+    Vx = V0 * sin(Angle_speed_current);
+    Vy = V0 * cos(Angle_speed_current);
+
+    W = Kp_W * (Angle_target - Angle_current);
+    W = W < W_MAX ? W : W_MAX;
+    W = W > W_MIN ? W : W_MIN;
+   // printf("y:%d	x:%d	w:%d\r\n",(int)Vy,(int)Vx,(int)W);
+		
+   Set_speed(Vx, Vy, W,Chassis_Move_Control_Loop);
+}
+
+
+
+
+static void Set_speed(int Velocity_X, int Velocity_Y, int W,chassis_move_t *Chassis_Move_Control_Loop) {
+    uint8_t i = 0;
+	  //运动分解
+    chassis_set_kinematics(Chassis_Move_Control_Loop->Vx_Set,
+                           Chassis_Move_Control_Loop->Vy_Set,
+                           Chassis_Move_Control_Loop->Vw_Set,
+                           Chassis_Move_Control_Loop);
+
+    //计算pid
+    //驱动轮
+    for ( i = 0; i < 4; i++)
+		
+    {
+        pid_calc(&Chassis_Move_Control_Loop->Wheel_Speed[i].pid_speed,
+                 Chassis_Move_Control_Loop->Wheel_Speed[i].speed,
+                 Chassis_Move_Control_Loop->Wheel_Speed[i].speed_set);
+    }
+    //转向轮
+    for ( i = 0; i < 4; i++)
+    {
+
+        pid_calc(&Chassis_Move_Control_Loop->Wheel_Dir[i].pid_pos,
+                 Chassis_Move_Control_Loop->Wheel_Dir[i].angle,//total_angle赋值的
+                 (Chassis_Move_Control_Loop->Wheel_Dir[i].angle_set));//初始化纠正-Read_init_AS5048A[i]//-Init_test_AS5048_test(i)
+
+        pid_calc(&Chassis_Move_Control_Loop->Wheel_Dir[i].pid_speed,
+                 Chassis_Move_Control_Loop->Wheel_Dir[i].speed,
+                 Chassis_Move_Control_Loop->Wheel_Dir[i].pid_pos.pos_out);
+    }
+
+    //赋值电流值
+    for ( i = 0; i < 4; i++)
+    {
+
+        Chassis_Move_Control_Loop->Wheel_Speed[i].give_current =
+            (int16_t)Chassis_Move_Control_Loop->Wheel_Speed[i].pid_speed.pos_out;
+        Chassis_Move_Control_Loop->Wheel_Dir[i].give_current =
+            (int16_t)Chassis_Move_Control_Loop->Wheel_Dir[i].pid_speed.pos_out;
+			
+    }
+
+    //发送控制电流
+    if(Chassis_Move_Control_Loop->Chassis_Mode == CHASSIS_ZERO_FORCE)
+    {
+        set_motor(&CHASSIS_CAN,0,0,0,0,0,0,0,0);
+    }
+    else 
+		{
+        set_motor(&CHASSIS_CAN,
+                  //驱动轮
+                  Chassis_Move_Control_Loop->Wheel_Speed[0].give_current,
+                  Chassis_Move_Control_Loop->Wheel_Speed[1].give_current,
+                  Chassis_Move_Control_Loop->Wheel_Speed[2].give_current,
+                  Chassis_Move_Control_Loop->Wheel_Speed[3].give_current,
+                  //转向轮
+                  Chassis_Move_Control_Loop->Wheel_Dir[0].give_current,
+                  Chassis_Move_Control_Loop->Wheel_Dir[1].give_current,
+                  Chassis_Move_Control_Loop->Wheel_Dir[2].give_current,
+                  Chassis_Move_Control_Loop->Wheel_Dir[3].give_current
+                 );
+    }
+	
+}
 
 
 
