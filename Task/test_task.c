@@ -68,19 +68,35 @@ void test_task(void const * argument)
 	
 	while(1)
 	{
+		/***
+		通道			档位				功能
+		6					下档				打环
+		6					上档				升环
+		6					中档				复位
+		
+		5					下档				推环
+		5					上					抱
+		5					中					复位
+		
+		PC4				高电平出发		下限
+		PC5				高电平触发		上限
+		***/
 		upper_feedback_update();
 			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4) ==0 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_5) ==0)//下限
 			{
 						//丝杆和甩环调节 	
-					if(rc.ch6==1){	
+					if(rc.ch6==1)
+					{	
 						Set_SolenoidValve(TuiHuan,1);
 						set_C620moter(rc.ch4*20,0,1.0);  
 					}
-					else if(rc.ch6==3){
+					else if(rc.ch6==3)
+					{
 						set_C620moter(rc.ch4*20,60,1.0);
 						Set_SolenoidValve(TuiHuan,0);
 					}
-					else if(rc.ch6==2){
+					else if(rc.ch6==2)
+					{
 						set_C620moter(rc.ch4*20,-90,2.0);					
 					}
 			}else if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4) ==1)  //限位开关触碰到下限，只能往上
@@ -146,7 +162,22 @@ void test_task(void const * argument)
 		
 
 		
-//	
+	    	//RUN_LED();
+	    	if(rc.ch5==3){
+	    	//初始位置
+	    		Set_SolenoidValve(BaoHuan,0);
+	    		Set_SolenoidValve(PingTai,0);
+	    	}else if(rc.ch5==1){
+//	    		Set_SolenoidValve(BaoHuan,1);
+	    		
+	    	}else if(rc.ch5==2){
+	    		Set_SolenoidValve(PingTai,1);
+	    		
+	    		
+	    	}
+			
+			
+			//	
 //		if(rc.ch6==1){set_C620moter(rc.ch4*20,-60,0);}
 //		if(rc.ch6==2){set_C620moter(rc.ch4*20,60,0);} 
 		

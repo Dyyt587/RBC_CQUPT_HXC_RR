@@ -63,3 +63,4 @@ robocon2023_cqupt\led_task.o: ..\Task\chassis_task.h
 robocon2023_cqupt\led_task.o: ..\Task\chassis_behaviour.h
 robocon2023_cqupt\led_task.o: ../Control/pid.h
 robocon2023_cqupt\led_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+robocon2023_cqupt\led_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
