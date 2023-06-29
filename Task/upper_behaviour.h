@@ -23,6 +23,9 @@ void upper_feedback_update(void);
 #define JiaZhua_nouse 3	//L1
 #define BaoHuan 1	//I1
 
+#define Limits_Up HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_5)
+#define Limits_Down HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4)
+
 #endif
 
 

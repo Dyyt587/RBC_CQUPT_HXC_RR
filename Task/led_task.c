@@ -3,9 +3,6 @@
 #include "upper_behaviour.h"
 #include "stdbool.h"
 
-
-		int satisfied;
-		int toal_flag;
 extern rc_info_t rc;
 int flag1_2=1;
 void LED_Delay(uint32_t time)
@@ -82,19 +79,17 @@ void auto_action01_pushring(int condition)
 { 	
 	//int satisfied;
     // 模拟条件判断，返回值表示是否满足条件
-	  if(rc.ch5==1)
-	  {
-			condition=1;
-	  }
 		if(condition == 1)
 		{
 				Set_SolenoidValve(TuiHuan,1);
+				osDelay(500);
 				condition++;
 		}
 		else
 		{
 			condition=0;
 		}
+		
     return ;
 }
 
@@ -103,8 +98,8 @@ void auto_action02_risering(int condition) {
 	
     if (condition == 2) {
 	    		Set_SolenoidValve(PingTai,1);
-			
-				condition++;
+					osDelay(500);			
+				  condition++;
         return;
     }
     // 执行操作2的其他逻辑
@@ -113,8 +108,7 @@ void auto_action02_risering(int condition) {
 // 操作函数3
 void auto_action03_hitring(int condition) {
     if (condition == 3) {
-			set_C620moter(rc.ch4*20,60,1.0);
-			
+			set_C620moter(rc.ch4*20,-90,2.0);
 				condition++;
         return;
     }
@@ -122,14 +116,23 @@ void auto_action03_hitring(int condition) {
 }
 void auto_action04_allreset(int condition) {
     if (condition == 4) {
-			set_C620moter(rc.ch4*20,0,1.0);
+			set_C620moter(rc.ch4*20,60,1.0);
 	    		Set_SolenoidValve(PingTai,0);
-					Set_SolenoidValve(TuiHuan,0);
-			
+					Set_SolenoidValve(TuiHuan,0);	
 				condition=0;
         return;
     }
     // 执行操作3的其他逻辑
+}
+int* set_condition_start(int* condition){
+		 if(rc.ch5==1&&Limits_Up==1)
+	  {
+			*condition=1;
+	  }
+}
+int* set_condition_judge(int* condition){
+		 if(rc.ch5!=1)
+			*condition=0;
 }
 
 /**
@@ -143,39 +146,21 @@ void led_task(void const * argument)
 		{
 			
     int condition = 0;  // 初始化条件
-
+		set_condition_start(&condition);
     // 执行操作1
     auto_action01_pushring(condition);
+		set_condition_judge(&condition);
     // 在操作1之后执行操作2
     auto_action02_risering(condition);
+		set_condition_judge(&condition);
     // 在操作2之后执行操作3
     auto_action03_hitring(condition);
+		set_condition_judge(&condition);
     // 在操作2之后执行操作4
 		auto_action04_allreset(condition);
-				RUN_LED();
-//		if(rc.ch5==3){
-//		//初始位置
-//			Set_SolenoidValve(BaoHuan,0);
-//			Set_SolenoidValve(PingTai,0);
-//			flag1_2=1;
-//		}else if(rc.ch5==1){
-//			Set_SolenoidValve(BaoHuan,1);
-//			
-//			
-//		}else if(rc.ch5==2){
-//			//推环 送环
-//			if(flag1_2==1)
-//			{
-//				Set_SolenoidValve(TuiHuan,1);
-//				osDelay(500);
-//				Set_SolenoidValve(PingTai,1);
-//				Set_SolenoidValve(TuiHuan,0);
-//				osDelay(500);
-//				flag1_2=0;
-//			}
-//			
-//		}
-    osDelay(50);
+		set_condition_judge(&condition);
+//		RUN_LED();
+		osDelay(50);
 	}
 
 }

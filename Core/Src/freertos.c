@@ -50,6 +50,7 @@
 osThreadId testTaskHandle;
 osThreadId chassisTaskHandle;
 osThreadId ledTaskHandle;
+osThreadId autoTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -59,6 +60,7 @@ osThreadId ledTaskHandle;
 void test_task(void const * argument);
 extern void chassis_task(void const * argument);
 extern void led_task(void const * argument);
+void auto_Task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -117,6 +119,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(ledTask, led_task, osPriorityIdle, 0, 128);
   ledTaskHandle = osThreadCreate(osThread(ledTask), NULL);
 
+  /* definition and creation of autoTask */
+  osThreadDef(autoTask, auto_Task, osPriorityIdle, 0, 128);
+  autoTaskHandle = osThreadCreate(osThread(autoTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -139,6 +145,24 @@ __weak void test_task(void const * argument)
     osDelay(1);
   }
   /* USER CODE END test_task */
+}
+
+/* USER CODE BEGIN Header_auto_Task */
+/**
+* @brief Function implementing the autoTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_auto_Task */
+__weak void auto_Task(void const * argument)
+{
+  /* USER CODE BEGIN auto_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END auto_Task */
 }
 
 /* Private application code --------------------------------------------------*/

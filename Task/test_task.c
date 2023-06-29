@@ -53,7 +53,40 @@ static void upper_Init(chassis_move_t* upper_Move_Init){
     PID_struct_init(&upper_Move_Init->chassis_angle_pid, POSITION_PID, 20000, 2000,
                     500.f, 0.00f, 0.01);
 }
+void set_ch6(void){
+		if(rc.ch6==1)
+		{	
+			Set_SolenoidValve(TuiHuan ,1);
+			set_C620moter(0,60,1.0);
+		}
+		else if(rc.ch6==3)
+		{
+			set_C620moter(rc.ch4*20,60,1.0);
+			Set_SolenoidValve(TuiHuan,0);
+		}
+		else if(rc.ch6==2)
+		{
+			set_C620moter(rc.ch4*20,-90,2.0);					
+		}
 
+}
+void set_ch6_0(void){
+		if(rc.ch6==1)
+		{	
+			Set_SolenoidValve(TuiHuan,1); 
+			set_C620moter(0,60,1.0);			
+		}
+		else if(rc.ch6==3)
+		{
+			set_C620moter(0,60,1.0);
+			Set_SolenoidValve(TuiHuan,0);
+		}
+		else if(rc.ch6==2)
+		{
+			set_C620moter(0,-90,2.0);					
+		}
+
+}
 
 void test_task(void const * argument)
 {
@@ -81,162 +114,38 @@ void test_task(void const * argument)
 		PC4				高电平出发		下限
 		PC5				高电平触发		上限
 		***/
-		upper_feedback_update();
-			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4) ==0 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_5) ==0)//下限
+			upper_feedback_update();
+			if(Limits_Down ==0 && Limits_Up ==0)//无上下限
 			{
-						//丝杆和甩环调节 	
-					if(rc.ch6==1)
-					{	
-						Set_SolenoidValve(TuiHuan,1);
-						set_C620moter(rc.ch4*20,0,1.0);  
-					}
-					else if(rc.ch6==3)
-					{
-						set_C620moter(rc.ch4*20,60,1.0);
-						Set_SolenoidValve(TuiHuan,0);
-					}
-					else if(rc.ch6==2)
-					{
-						set_C620moter(rc.ch4*20,-90,2.0);					
-					}
-			}else if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_4) ==1)  //限位开关触碰到下限，只能往上
+					set_ch6();
+			}else if(Limits_Down ==1)  //限位开关触碰到下限，只能往上
 			{
 				if(rc.ch4 > 0) //通道4的模拟值大于4，说明平台往上
 				{
-					if(rc.ch6==1){	
-						Set_SolenoidValve(TuiHuan,1);
-						set_C620moter(rc.ch4*20,0,1.0);  
-					}
-					else if(rc.ch6==3){
-						set_C620moter(rc.ch4*20,60,1.0);
-						Set_SolenoidValve(TuiHuan,0);
-					}
-					else if(rc.ch6==2){
-						set_C620moter(rc.ch4*20,-90,2.0);					
-					}
+					set_ch6();
 				}else  //往下让丝杆失灵
 				{
-					if(rc.ch6==1){	 
-						Set_SolenoidValve(TuiHuan,1);
-						set_C620moter(0,0,1.0);  
-					}
-					else if(rc.ch6==3){
-						set_C620moter(0,60,1.0);
-						Set_SolenoidValve(TuiHuan,0);
-					}
-					else if(rc.ch6==2){
-						set_C620moter(0,-90,2.0);					
-					}					
+					set_ch6_0();
 				}
-			}else if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_5) ==1)
+			}else if(Limits_Up ==1)
 			{
 				if(rc.ch4 < 0) //通道4的模拟值<于4，说明平台往 xia
 				{
-					if(rc.ch6==1){	
-						Set_SolenoidValve(TuiHuan,1);
-						set_C620moter(rc.ch4*20,0,1.0);  
-					}
-					else if(rc.ch6==3){
-						set_C620moter(rc.ch4*20,60,1.0);
-						Set_SolenoidValve(TuiHuan,0);
-					}
-					else if(rc.ch6==2){
-						set_C620moter(rc.ch4*20,-90,2.0);					
-					}
+					set_ch6();
 				}else  //
 				{
-					if(rc.ch6==1){	 
-						Set_SolenoidValve(TuiHuan,1);
-						set_C620moter(0,0,1.0);  
-					}
-					else if(rc.ch6==3){
-						set_C620moter(0,60,1.0);
-						Set_SolenoidValve(TuiHuan,0);
-					}
-					else if(rc.ch6==2){
-						set_C620moter(0,-90,2.0);					
+					set_ch6_0();	
 					}					
 				}				
-			}
-
-		
-
-		
+			}	
 	    	//RUN_LED();
-	    	if(rc.ch5==3){
-	    	//初始位置
-	    		Set_SolenoidValve(BaoHuan,0);
-	    		Set_SolenoidValve(PingTai,0);
-	    	}else if(rc.ch5==1){
-//	    		Set_SolenoidValve(BaoHuan,1);
-	    		
-	    	}else if(rc.ch5==2){
-	    		Set_SolenoidValve(PingTai,1);
-	    		
-	    		
-	    	}
-			
-			
-			//	
-//		if(rc.ch6==1){set_C620moter(rc.ch4*20,-60,0);}
-//		if(rc.ch6==2){set_C620moter(rc.ch4*20,60,0);} 
-		
-		
-//		if(rc.ch7==1){
-//			set_C620moter(rc.ch4*20,-60,0);	
-//			flag_push=1;
-//			if(ABS(upper_Move.Chassis_Motor_Measure[1]->total_angle-10)<1.0){
-//					HAL_GPIO_WritePin(GPIOF,GPIO_PIN_0,GPIO_PIN_RESET);
-//			}
-//		}
-//		else if(rc.ch7==3){
-//			set_C620moter(rc.ch4*20,0,0);
-//			if(ABS(upper_Move.Chassis_Motor_Measure[1]->total_angle-0)<1.0){
-//					HAL_GPIO_WritePin(GPIOF,GPIO_PIN_0,GPIO_PIN_SET);		
-//			}
-//			flag_push=0;
-//		}
-//		else if(rc.ch7==2){
-//				if(flag_push==0){
-//				set_C620moter(rc.ch4*20,60,0);
-//			}			
-//				flag_push=0;
-//		}
-//		else if(rc.ch8==1){
-//		HAL_GPIO_WritePin(GPIOF,GPIO_PIN_1,GPIO_PIN_RESET);
-//		}
-//		else if(rc.ch8==2){
-//			printf("this is ch==2\r\n");
-//		}else if(rc.ch8==3){
-//		HAL_GPIO_WritePin(GPIOF,GPIO_PIN_1,GPIO_PIN_SET);
-//		}
-//		
-//		
-//		else if(rc.ch11==1){
-//		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_2,GPIO_PIN_RESET);
-//		}
-//		else if(rc.ch11==2){
-//			printf("this is ch==2\r\n");
-//		}else if(rc.ch8==3){
-//		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_2,GPIO_PIN_SET);
-//		}	
-//		
-//		
-//		else if(rc.ch9==1){
-//		
-//		}
-//		else if(rc.ch9==2){
-//			printf("this is ch==2\r\n");
-//		}else if(rc.ch9==3){
-//		HAL_GPIO_WritePin(GPIOB,GPIO_PIN_0,GPIO_PIN_SET);
-//		}	
-//		else{
-//		printf("this is else \r\n");
-//		}
-//		
-//		
-		
-		osDelay(10);
-	}
-	
+	   	if(rc.ch5==3){
+	   	//初始位置
+	   		Set_SolenoidValve(BaoHuan,0);
+	   		Set_SolenoidValve(PingTai,0);
+	   	}else if(rc.ch5==1){
+	   		Set_SolenoidValve(BaoHuan,1);
+	   	}else if(rc.ch5==2){
+	   		Set_SolenoidValve(PingTai,1);	
+	   	}
 }
