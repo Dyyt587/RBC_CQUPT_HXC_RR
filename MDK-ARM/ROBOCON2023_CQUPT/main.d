@@ -50,6 +50,7 @@ robocon2023_cqupt\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/eve
 robocon2023_cqupt\main.o: ../Core/Inc/can.h
 robocon2023_cqupt\main.o: ../Core/Inc/dma.h
 robocon2023_cqupt\main.o: ../Core/Inc/spi.h
+robocon2023_cqupt\main.o: ../Core/Inc/tim.h
 robocon2023_cqupt\main.o: ../Core/Inc/usart.h
 robocon2023_cqupt\main.o: ../Core/Inc/gpio.h
 robocon2023_cqupt\main.o: ../Hardware/bsp_can.h

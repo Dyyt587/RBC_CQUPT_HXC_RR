@@ -22,6 +22,7 @@
 #include "can.h"
 #include "dma.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -51,6 +52,7 @@ float set_pos_x;
 float set_pos_y;
 float set_zangle;
 int move_flag;
+uint8_t shot_flag=0;
 //串口屏 串口2
 uint8_t Rx_len_Huart2;//串口2接收长度
 uint8_t ReceiveBuff_Huart2[BUFFERSIZE]; //串口2接收缓冲区
@@ -126,10 +128,13 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
   MX_UART7_Init();
+  MX_TIM2_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   dbus_uart_init();
   my_can_filter_init_recv_all(&hcan1);
-  can_filter_recv_special(&hcan2);
+  can_filter_recv_special(&hcan2);  
+	HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
@@ -224,7 +229,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
+ if(htim->Instance == TIM2)
+ {
+//	 printf("jims\r\n");
+	 if(shot_flag == 1)
+		 shot_flag = 0;
+	 else
+		 shot_flag = 0;
+ }
   /* USER CODE END Callback 1 */
 }
 

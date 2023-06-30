@@ -45,7 +45,7 @@ void SongHuan(void){
 /*
 speed_sigan为丝杆电机速度环目标速度    angle_paohuan为抛环电机的目标角度 speed_paohuan为抛环电机的目标速度
 */
-void set_C620moter(float speed_sigan,float angle_paohuan,float speed_paohuan){
+void set_C620moter(float speed_sigan,float angle_paohuan,float speed_paohuan){ 
 		float k=0.5;
 	angle_paohuan=k*angle_paohuan;
     //计算pid

@@ -57,7 +57,7 @@ void set_ch6(void){
 		if(rc.ch6==1)
 		{	
 			Set_SolenoidValve(TuiHuan ,1);
-			set_C620moter(0,60,1.0);
+			set_C620moter(rc.ch4*20,60,1.0);
 		}
 		else if(rc.ch6==3)
 		{
@@ -66,7 +66,7 @@ void set_ch6(void){
 		}
 		else if(rc.ch6==2)
 		{
-			set_C620moter(rc.ch4*20,-90,2.0);					
+			set_C620moter(rc.ch4*20,-90,2.5);//set_C620moter(rc.ch4*20,-90,2.0);				
 		}
 
 }
@@ -83,7 +83,7 @@ void set_ch6_0(void){
 		}
 		else if(rc.ch6==2)
 		{
-			set_C620moter(0,-90,2.0);					
+			set_C620moter(0,-90,2.5);//	set_C620moter(rc.ch4*20,-90,2.0);			
 		}
 
 }
@@ -123,7 +123,8 @@ void test_task(void const * argument)
 				if(rc.ch4 > 0) //通道4的模拟值大于4，说明平台往上
 				{
 					set_ch6();
-				}else  //往下让丝杆失灵
+				}
+				else  //往下让丝杆失灵
 				{
 					set_ch6_0();
 				}
@@ -135,17 +136,20 @@ void test_task(void const * argument)
 				}else  //
 				{
 					set_ch6_0();	
-					}					
-				}				
-			}	
-	    	//RUN_LED();
+				}					
+		  }			
+	osDelay(5);
 	   	if(rc.ch5==3){
 	   	//初始位置
 	   		Set_SolenoidValve(BaoHuan,0);
 	   		Set_SolenoidValve(PingTai,0);
 	   	}else if(rc.ch5==1){
-	   		Set_SolenoidValve(BaoHuan,1);
+				Set_SolenoidValve(PingTai,1);	
 	   	}else if(rc.ch5==2){
-	   		Set_SolenoidValve(PingTai,1);	
-	   	}
+	   		Set_SolenoidValve(BaoHuan,1);
+	   	}			
+	}	
+
+	    	//RUN_LED();
+
 }

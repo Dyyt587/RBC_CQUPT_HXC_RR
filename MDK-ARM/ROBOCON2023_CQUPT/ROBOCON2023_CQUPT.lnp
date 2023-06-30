@@ -10,6 +10,7 @@
 "robocon2023_cqupt\stm32f4xx_it.o"
 "robocon2023_cqupt\stm32f4xx_hal_msp.o"
 "robocon2023_cqupt\stm32f4xx_hal_timebase_tim.o"
+"robocon2023_cqupt\tim.o"
 "robocon2023_cqupt\stm32f4xx_hal_can.o"
 "robocon2023_cqupt\stm32f4xx_hal_rcc.o"
 "robocon2023_cqupt\stm32f4xx_hal_rcc_ex.o"
