@@ -1,6 +1,5 @@
 #include "upper_behaviour.h"
 extern chassis_move_t upper_Move;
-
 /*
 电磁阀控制funtion为第几个电磁阀，bool n 对应电磁阀开通关断
 SolenoidValve：电磁阀
@@ -9,6 +8,9 @@ I1：DF1
 I2：DF0
 L1：PC2
 L2:	PB0
+
+
+现有误
 */
 void Set_SolenoidValve(int function,int n){
 	switch(function){
@@ -47,7 +49,7 @@ speed_sigan为丝杆电机速度环目标速度    angle_paohuan为抛环电机的目标角度 speed_p
 */
 void set_C620moter(float speed_sigan,float angle_paohuan,float speed_paohuan){ 
 		float k=0.5;
-	angle_paohuan=k*angle_paohuan;
+	 angle_paohuan=k*angle_paohuan;
     //计算pid
 		//丝杆电机的速度环
 		pid_calc(&upper_Move.Wheel_Speed[0].pid_speed,upper_Move.Wheel_Speed[0].speed,speed_sigan);
@@ -64,9 +66,11 @@ void set_C620moter(float speed_sigan,float angle_paohuan,float speed_paohuan){
 
 }
 void upper_feedback_update(void){
-		upper_Move.Wheel_Speed[0].speed = upper_Move.Chassis_Motor_Measure[0]->speed_rpm;
+				upper_Move.Wheel_Speed[0].speed = upper_Move.Chassis_Motor_Measure[0]->speed_rpm;
         upper_Move.Wheel_Dir[1].speed = upper_Move.Chassis_Motor_Measure[1]->speed_rpm;
-        upper_Move.Wheel_Dir[1].angle = upper_Move.Chassis_Motor_Measure[1]->total_angle*360.0/294876;//294876	
+        upper_Move.Wheel_Dir[1].angle = upper_Move.Chassis_Motor_Measure[1]->total_angle*360.0/294876;//294876
+	
+				
 }
 
 

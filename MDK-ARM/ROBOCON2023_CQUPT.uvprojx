@@ -420,6 +420,11 @@
               <FilePath>../Core/Src/spi.c</FilePath>
             </File>
             <File>
+              <FileName>tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\tim.c</FilePath>
+            </File>
+            <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/usart.c</FilePath>
@@ -438,11 +443,6 @@
               <FileName>stm32f4xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f4xx_hal_timebase_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\tim.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -663,6 +663,11 @@
               <FileName>upper_behaviour.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Task\upper_behaviour.c</FilePath>
+            </File>
+            <File>
+              <FileName>auto_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Task\auto_task.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -7,14 +7,14 @@
 
 #define UART_RX_DMA_SIZE (1024)
 #define DBUS_MAX_LEN     (50)
-#define DJI 1
+#define DJI 0 
 
 #if DJI
 #define DBUS_BUFLEN      (18)
 #else
 #define DBUS_BUFLEN      (25)
 #endif
-
+ 
 
 
 #define DBUS_HUART       huart1 /* for dji remote controler reciever */
